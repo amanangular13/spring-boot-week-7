@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 //@SpringBootTest
 @Slf4j
@@ -82,6 +83,27 @@ class TestingAppApplicationTests {
                 .hasSize(2);
 
         log.info("All asserts are successful");
+    }
+
+    @Test
+    @DisplayName("T6")
+    void testDivideTwoNumber_whenDenominatorIsZero_thenArithmeticException() {
+        int a = 10;
+        int b = 0;
+
+        assertThatThrownBy(() -> divideTwoNumbers(a, b))
+                .isInstanceOf(ArithmeticException.class)
+                .hasMessage("/ by zero");
+    }
+
+    int divideTwoNumbers(int a, int b) {
+//        throw new ArrayIndexOutOfBoundsException("error");
+        try {
+            return a / b;
+        } catch (ArithmeticException e) {
+            log.error("Arithmetic Exception {}", e.getLocalizedMessage());
+            throw new ArithmeticException(e.getLocalizedMessage());
+        }
     }
 
 }
