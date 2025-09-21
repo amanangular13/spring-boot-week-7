@@ -45,4 +45,17 @@ class TestingAppApplicationTests {
         log.info("Test3 is running");
     }
 
+    @Test
+    void T4() {
+        int a = 5;
+        int b = 10;
+        int expected = 15;
+        Assertions.assertEquals(expected, addTwoNumbers(a, b));
+        log.info("addTwoNumbers giving correct results");
+    }
+
+    int addTwoNumbers(int a, int b) {
+        return a + b;
+    }
+
 }
