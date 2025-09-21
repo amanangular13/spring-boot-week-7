@@ -4,6 +4,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
 //@SpringBootTest
 @Slf4j
 class TestingAppApplicationTests {
@@ -56,6 +60,28 @@ class TestingAppApplicationTests {
 
     int addTwoNumbers(int a, int b) {
         return a + b;
+    }
+
+    @Test
+    void T5() {
+        assertThat(5)
+                .isEqualTo(5)
+                .isNotEqualTo(10)
+                .isGreaterThan(2);
+
+        assertThat("Hello world")
+                .startsWith("He")
+                .endsWith("ld")
+                .contains("llo w");
+
+        assertThat(true).isTrue();
+
+        assertThat(List.of("apple", "banana"))
+                .contains("apple")
+                .doesNotContain("Orange")
+                .hasSize(2);
+
+        log.info("All asserts are successful");
     }
 
 }
