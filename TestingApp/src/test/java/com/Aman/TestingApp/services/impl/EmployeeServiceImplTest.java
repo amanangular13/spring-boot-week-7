@@ -2,6 +2,7 @@ package com.Aman.TestingApp.services.impl;
 
 import com.Aman.TestingApp.dto.EmployeeDto;
 import com.Aman.TestingApp.entities.Employee;
+import com.Aman.TestingApp.exceptions.ResourceNotFoundException;
 import com.Aman.TestingApp.repositories.EmployeeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -64,6 +66,17 @@ class EmployeeServiceImplTest {
     }
 
     @Test
+    void testGetEmployeeById_WhenEmployeeIsNotPresent_ThenThrowException() {
+        when(employeeRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> employeeService.getEmployeeById(1L))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessage("Employee not found with id: 1");
+
+        verify(employeeRepository).findById(1L);
+    }
+
+    @Test
     void testCreateNewEmployee_WhenValidEmployee_ThenCreateNewEmployee() {
 
         when(employeeRepository.findByEmail(anyString())).thenReturn(List.of());
@@ -84,4 +97,19 @@ class EmployeeServiceImplTest {
         Employee capturedEmployee = employeeArgumentCaptor.getValue();
         assertThat(capturedEmployee.getEmail()).isEqualTo(mockEmployee.getEmail());
     }
+
+    @Test
+    void testCreateNewEmployee_WhenAttemptingToCreateNewEmployeeWithExistingEmail_ThenThrowRuntimeException() {
+        when(employeeRepository.findByEmail(mockEmployeeDto.getEmail())).thenReturn(List.of(mockEmployee));
+
+        assertThatThrownBy(() -> employeeService.createNewEmployee(mockEmployeeDto))
+                .isInstanceOf(RuntimeException.class)
+                .hasMessage("Employee already exist with email: " + mockEmployee.getEmail());
+
+        verify(employeeRepository).findByEmail(mockEmployeeDto.getEmail());
+        verify(employeeRepository, never()).save(any());
+    }
+
+    // same way we can add unit test for rest of the functions in service
+    // that is update and delete then the coverage will be 100%`
 }
