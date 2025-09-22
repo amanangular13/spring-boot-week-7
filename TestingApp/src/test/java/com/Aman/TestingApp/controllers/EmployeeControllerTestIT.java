@@ -6,12 +6,8 @@ import com.Aman.TestingApp.repositories.EmployeeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.web.reactive.server.WebTestClient;
 
 class EmployeeControllerTestIT extends AbstractIntegrationTest{
-
-    @Autowired
-    private WebTestClient webTestClient;
 
     @Autowired
     private EmployeeRepository employeeRepository;
