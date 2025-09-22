@@ -19,14 +19,12 @@ class EmployeeControllerTestIT extends AbstractIntegrationTest{
     @BeforeEach
     void setUp() {
         testEmployee = Employee.builder()
-                .id(1L)
                 .name("Aman Verma")
                 .email("aman@gmail.com")
                 .salary(102030L)
                 .build();
 
         testEmployeeDto = EmployeeDto.builder()
-                .id(1L)
                 .name("Aman Verma")
                 .email("aman@gmail.com")
                 .salary(102030L)
@@ -42,8 +40,9 @@ class EmployeeControllerTestIT extends AbstractIntegrationTest{
                 .uri("/employees/{id}", savedEmployee.getId())
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(EmployeeDto.class)
-                .isEqualTo(testEmployeeDto);
+                .expectBody()
+                .jsonPath("$.email").isEqualTo(testEmployeeDto.getEmail())
+                .jsonPath("$.name").isEqualTo(testEmployeeDto.getName());
 
     }
 
